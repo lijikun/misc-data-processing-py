@@ -103,7 +103,7 @@ def plot_svd(wl, t, U, V, n):
     fig1b.tick_params(axis='both', which='major', labelsize=14) 
     plt.show()
     
-def svdplot2(filename, wl0 = 250, wl1 = 750, n = 4, ref = False, 
+def plot2_svd(filename, wl0 = 250, wl1 = 750, n = 4, ref = False, 
              baseline = '', rot = 0, p = 10, 
              wavelengths = [], timepoints = [], weight = [], rel = False):
     # Reads raw data, process if multiple files are given.
