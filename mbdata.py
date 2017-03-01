@@ -18,4 +18,4 @@ def read_mb(filename, nPoints=256):
             line1 = [float(x) for x in f1.readline().split()]
             delta.append(line1[0])
             intensity.append(line1[1])
-        return delta, intensity
+        return numpy.array(delta), numpy.array(intensity)
