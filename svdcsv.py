@@ -11,18 +11,28 @@ import matplotlib.pyplot as plt
 
 def read_csv(filename):
     with open(filename, mode='r') as f1:
-        [f1.readline() for j in range(13)]
-        nt = int(f1.readline().split(sep=',')[1].split()[0])
-        [f1.readline() for j in range(11)]
-        wl = [float(x) for x in f1.readline().split(sep=',')[1:-1]]
+        nt = 0
         t = []
         Z = []
-        for j in range(nt):
-            line1 = [float(x) for x in f1.readline().split(sep=',')]
-            t.append(line1[0])
-            Z.append(line1[1:])
+        wl = []        
+        while True:
+            line1 = f1.readline()
+            if 'Time,' in line1:
+                nt = int(line1.split(sep=',')[1].split()[0])
+                break
+        while True:
+            line1 = f1.readline()
+            if 'Time,Wavelength' in line1:
+                line1 = f1.readline()
+                wl = [float(x) for x in line1.split(sep=',')[1:-1]]
+                break
+        if wl:
+            for j in range(nt):
+                line1 = [float(x) for x in f1.readline().split(sep=',')]
+                t.append(line1[0])
+                Z.append(line1[1:])
         f1.close()
-        return numpy.array(Z), numpy.array(wl), numpy.array(t) 
+        return numpy.array(Z), numpy.array(wl), numpy.array(t)
 
 fig_count = 0
        
