@@ -114,7 +114,7 @@ def plot_svd(wl, t, U, V, n):
     plt.show()
     
 def plot2_svd(filename, t0 = 0.0, t1 = 1.0, wl0 = 300.0, wl1 = 600.0, 
-             n = 4, ref = False, baseline = '', 
+             n = 4, ref = False,  
              wavelengths = [], timepoints = [], weight = [], rel = False):
     # Reads raw data, process if multiple files are given.
     if filename.__class__.__name__ == 'list':
@@ -141,12 +141,6 @@ def plot2_svd(filename, t0 = 0.0, t1 = 1.0, wl0 = 300.0, wl1 = 600.0,
     # Does the real SVD. Prints n eigenvalues.
     U_, s_, V_ = numpy.linalg.svd(Z_)
     print(s_[0:n])
-    # Reverses baseline weighing if done initially.
-    if baseline:
-        Z0_ = Z0[(wl >= wl0) & (wl <= wl1)]
-        for j in range(Z_.shape[1]):
-            Z_[:, j] /= Z0_[j]
-            V_[:, j] /= Z0_[j]
     # Plots the data.
     plot_svd(wl_, t, U_, V_, n)
     # return Z_, wl_, t, U_, s_, V_
@@ -167,16 +161,3 @@ def self_ref(Z):
             Z_[i, j] = Z[i, j] - Z[0, j] -  Z[i, -1]
     return Z_
     
-def rot_autocorr(U, p):
-    n0, n1 = U.shape
-    Corr = numpy.zeros((p, p))
-    for i in range(p):
-        for j in range(p):
-            corr1 = 0.0
-            for k in range(n0 - 1):
-                corr1 += (U[k, i] * U[k + 1, j])
-            Corr[i, j] = corr1
-    w, v = numpy.linalg.eigh((Corr + Corr.T) / 2.0)
-    R = numpy.identity(n1)
-    R[0:p, 0:p] = numpy.fliplr(v)
-    return R
