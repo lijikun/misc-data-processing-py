@@ -113,8 +113,8 @@ def plot_svd(wl, t, U, V, n):
     fig1b.tick_params(axis='both', which='major', labelsize=14) 
     plt.show()
     
-def plot2_svd(filename, wl0 = 250, wl1 = 750, n = 4, ref = False, 
-             baseline = '', rot = 0, p = 10, 
+def plot2_svd(filename, t0 = 0.0, t1 = 1.0, wl0 = 300.0, wl1 = 600.0, 
+             n = 4, ref = False, baseline = '', 
              wavelengths = [], timepoints = [], weight = [], rel = False):
     # Reads raw data, process if multiple files are given.
     if filename.__class__.__name__ == 'list':
@@ -136,20 +136,11 @@ def plot2_svd(filename, wl0 = 250, wl1 = 750, n = 4, ref = False,
         Z = self_ref(Z)
     # Truncates the data according to wavelengths.
     wl_ = wl[(wl >= wl0) & (wl <= wl1)]
-    Z_ = Z[:, (wl >= wl0) & (wl <= wl1)]    
-    # Does the real SVD.
+    t_ = t[(t >= t0) & (t <= t1)]
+    Z_ = Z[(t >= t0) & (t <= t1), (wl >= wl0) & (wl <= wl1)]    
+    # Does the real SVD. Prints n eigenvalues.
     U_, s_, V_ = numpy.linalg.svd(Z_)
-    # Performs rotation.
-    if rot == 1:
-        R = rot_autocorr(U_, p)
-        U_ = numpy.dot(U_, R)
-        V_ = numpy.dot(U_.T, Z_)
-    elif rot == 2:
-        R = rot_autocorr(V_.T, p)
-        V_ = numpy.dot(R.T, V_)
-        U_ = numpy.dot(Z_, V_.T)
-    else:
-        print(s_[0:n])
+    print(s_[0:n])
     # Reverses baseline weighing if done initially.
     if baseline:
         Z0_ = Z0[(wl >= wl0) & (wl <= wl1)]
