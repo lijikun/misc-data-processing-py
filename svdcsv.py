@@ -139,8 +139,7 @@ def plot2_svd(filename, t0 = 0.0, t1 = 1.0, wl0 = 300.0, wl1 = 600.0,
     U_, s_, V_ = numpy.linalg.svd(Z_)
     print(s_[0:n])
     # Plots the data.
-    plot_svd(wl_, t, U_, V_, n)
-    # return Z_, wl_, t, U_, s_, V_
+    plot_svd(wl_, t_, U_, V_, n)
     
 def read_baseline(baseline):
     with open(baseline, mode='r') as f2:
