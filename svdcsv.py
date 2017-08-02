@@ -126,18 +126,15 @@ def plot2_svd(filename, t0 = 0.0, t1 = 1.0, wl0 = 300.0, wl1 = 600.0,
         plot_timetraces(Z, wl, t, wavelengths, rel = rel)
     if timepoints:
         plot_spectra(Z, wl, t, timepoints)
-    # Weighs data by baseline.
-    if baseline:
-        Z0 = read_baseline(baseline)        
-        for j in range(Z.shape[1]):
-                Z[:, j] *= Z0[j]
     # Calculates difference spectra.
     if ref:
         Z = self_ref(Z)
     # Truncates the data according to wavelengths.
-    wl_ = wl[(wl >= wl0) & (wl <= wl1)]
-    t_ = t[(t >= t0) & (t <= t1)]
-    Z_ = Z[(t >= t0) & (t <= t1), (wl >= wl0) & (wl <= wl1)]    
+    wl_mask = (wl >= wl0) & (wl <= wl1)
+    t_mask = (t >= t0) & (t <= t1)
+    wl_ = wl[wl_mask]
+    t_ = t[t_mask]
+    Z_ = Z[:, wl_mask][t_mask, :]    
     # Does the real SVD. Prints n eigenvalues.
     U_, s_, V_ = numpy.linalg.svd(Z_)
     print(s_[0:n])
