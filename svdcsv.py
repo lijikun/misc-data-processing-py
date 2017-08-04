@@ -11,28 +11,43 @@ import matplotlib.pyplot as plt
 
 def read_csv(filename):
     with open(filename, mode='r') as f1:
-        nt = 0
-        t = []
         Z = []
-        wl = []        
-        while True:
-            line1 = f1.readline()
-            if 'Time,' in line1:
-                nt = int(line1.split(sep=',')[1].split()[0])
-                break
-        while True:
+        t = []
+        w = []
+        flag_wt = False
+        while True: # two possible formats in input file
             line1 = f1.readline()
             if 'Time,Wavelength' in line1:
                 line1 = f1.readline()
-                wl = [float(x) for x in line1.split(sep=',')[1:-1]]
+                w = [float(x) for x in line1.split(sep=',')[1:-1]]
                 break
-        if wl:
-            for j in range(nt):
-                line1 = [float(x) for x in f1.readline().split(sep=',')]
-                t.append(line1[0])
-                Z.append(line1[1:])
-        f1.close()
-        return numpy.array(Z), numpy.array(wl), numpy.array(t)
+            if 'Wavelength,Time' in line1:
+                line1 = f1.readline()
+                t = [float(x) for x in line1.split(sep=',')[1:-1]]
+                flag_wt = True
+                break
+            if not line1: # error: detects end of file prematurely
+                break
+        if w:
+            while True:
+                line1 = f1.readline()
+                if line1.strip():
+                    line1_numbers = [float(x) for x in line1.split(sep=',')]
+                    t.append(line1_numbers[0])
+                    Z.append(line1_numbers[1:])                 
+                else:
+                    break
+        elif t:
+            while True:
+                line1 = f1.readline()
+                if line1.strip():
+                    line1_numbers = [float(x) for x in line1.split(sep=',')]
+                    w.append(line1_numbers[0])
+                    Z.append(line1_numbers[1:])
+                else:
+                    break
+        f1.close()            
+        return (numpy.array(Z).transpose() if flag_wt else numpy.array(Z)), numpy.array(w), numpy.array(t)
 
 fig_count = 0
        
