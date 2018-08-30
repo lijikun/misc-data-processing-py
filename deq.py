@@ -18,4 +18,5 @@ else:
     eta = (eigs[1] - eigs[0]) / eigs[2] 
     ev = 0.5 * 9.717e21 * 0.16e-28 * eigs[2] * math.sqrt(1 + eta * eta / 3)
     mms = ev / 1.4413e4 * 2.9979e11
-    print(mms)
+    print('DeltaEq = ', mms)
+    print('eta = ', eta)
