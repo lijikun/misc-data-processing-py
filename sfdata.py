@@ -6,6 +6,7 @@
 from os import path
 import numpy
 
+
 def spliceData(z, w, t, wmin, wmax, tmin, tmax):
     if z.shape == (len(w), len(t)):
         return ((z[(w >= wmin) & (w <= wmax),:])[:, (t >= tmin) & (t <= tmax)],
@@ -14,7 +15,9 @@ def spliceData(z, w, t, wmin, wmax, tmin, tmax):
         
 
 def exportData(z, w, t, fileName):
-    with open(fileName, 'w') as f1:
+    fileName1 = fileName + ('.txt' 
+                            if path.splitext(fileName)[1]!='.txt' else '')
+    with open(fileName1, 'w') as f1:
         f1.write('Time')
         for w1 in w:
             f1.write('\t{0}'.format(w1))
@@ -25,6 +28,7 @@ def exportData(z, w, t, fileName):
                 f1.write('\t{0}'.format(z[k][j]))
             f1.write('\n')
     f1.close()
+
 
 def importData(fileName):
     extension = path.splitext(fileName)[1]
@@ -59,7 +63,7 @@ def importData(fileName):
             line1 = f1.readline()
             line1Items = line1.split()
             if line1Items[0] == 'Time' and len(line1Items) > 1:
-                w = line1Items[1:]
+                w = [float(x) for x in line1Items[1:]]
         # Reads the rest of the data, if any.        
         if w:
             sepString = ',' if extension == '.csv' else None
